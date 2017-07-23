@@ -1,0 +1,20 @@
+---
+# tasks file for certificates
+
+- name: Install requirements
+  package:
+    name: "{{ item }}"
+  with_items:
+    - "{{ certificates_packages }}"
+    - "{{ certificates_additional_packages }}"
+  tags:
+    - package
+    - certificates
+
+- name: Generate self-signed Certificates
+  when: certificates_generate_self_signed
+  include: generate.yml
+
+- name: Copy Certificates
+  when: certificates is defined
+  include: copy.yml

@@ -1,0 +1,61 @@
+---
+
+- name: Copy Keys
+  when: item.key is defined
+  no_log: true
+  copy:
+    dest: "{{certificates_private_directory}}/{{ item.name }}.key"
+    content: |
+      {{ item.key }}
+    owner: root
+    group: ssl-cert
+    mode: 0640
+  with_items: "{{ certificates }}"
+
+- name: Copy Certificates
+  when: item.cert is defined
+  no_log: true
+  copy:
+    dest: "{{certificates_cert_directory}}/{{ item.name }}.cert"
+    content: |
+      {{ item.cert }}
+  with_items: "{{ certificates }}"
+
+- name: Copy Intermediate Certificates
+  when: item.intermediate is defined
+  no_log: true
+  copy:
+    dest: "{{certificates_cert_directory}}/{{ item.name }}.intermediate.cert"
+    content: |
+      {{ item.intermediate }}
+  with_items: "{{ certificates }}"
+
+- name: Copy Root Certificates
+  when: item.root is defined
+  no_log: true
+  copy:
+    dest: "{{certificates_cert_directory}}/{{ item.name }}.root.cert"
+    content: |
+      {{ item.root }}
+  with_items: "{{ certificates }}"
+
+- name: Create Entire SSL Certificate Trust Chain
+  when: item.cert is defined and item.intermediate is defined and item.root is defined
+  no_log: true
+  copy:
+    dest: "{{certificates_cert_directory}}/{{ item.name }}.cert.intermediate.root.pem"
+    content: |
+      {{ item.cert }}{{ item.intermediate }}{{ item.root }}
+  with_items: "{{ certificates }}"
+
+- name: Create Private Key and Entire Trust Chain
+  when: item.key is defined and item.cert is defined and item.intermediate is defined and item.root is defined
+  no_log: true
+  copy:
+    dest: "{{ certificates_private_directory }}/{{ item.name }}.key.cert.intermediate.root.pem"
+    owner: root
+    group: ssl-cert
+    mode: 0640
+    content: |
+      {{ item.key }}{{ item.cert }}{{ item.intermediate }}{{ item.root }}
+  with_items: "{{ certificates }}"

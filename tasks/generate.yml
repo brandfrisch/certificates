@@ -1,0 +1,70 @@
+---
+
+- name: Create CA Key
+  when: ca_key is not defined
+  shell: "openssl genrsa 2048 > {{ certificates_private_directory }}/ca.key"
+  args:
+    creates: "{{ certificates_private_directory }}/ca.key"
+
+- name: Set host facts from a task
+  when: ca_key is not defined
+  set_fact:
+    ca_key: "{{ certificates_private_directory }}/ca.key"
+
+- name: Secure CA Key
+  file:
+    path: "{{ ca_key }}"
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Create CA Cert
+  when: ca_cert is not defined
+  shell: "openssl req -new -x509 -nodes -days 3650 -subj '{{ certificates_ca_subject }}' -key {{ ca_key }} > {{ certificates_cert_directory }}/ca.cert"
+  args:
+    creates: "{{ certificates_cert_directory }}/ca.cert"
+
+- name: Set host facts from a task
+  when: ca_cert is not defined
+  set_fact:
+    ca_cert: "{{ certificates_cert_directory }}/ca.cert"
+
+- name: Create Signing Request
+  shell: "openssl req -newkey rsa:2048 -days 3560 -subj '{{ certificates_ca_subject }}/CN={{ item }}' -nodes -keyout {{ certificates_private_directory }}/{{ item }}.key > {{ certificates_private_directory }}/{{ item }}.req"
+  args:
+    creates: "{{ certificates_private_directory }}/{{ item }}.key"
+  register: cert_created
+  with_items:
+    - "{{ certificates_common_names }}"
+
+- name: Create Key
+  when: cert_created|changed
+  shell: "openssl rsa -in {{ certificates_private_directory }}/{{ item }}.key -out {{ certificates_private_directory }}/{{ item }}.key"
+  with_items:
+    - "{{ certificates_common_names }}"
+  tags:
+    - skip_ansible_lint
+
+- name: Secure Key
+  file:
+    path: "{{ certificates_private_directory }}/{{ item }}.key"
+    owner: root
+    group: ssl-cert
+    mode: 0640
+  with_items:
+    - "{{ certificates_common_names }}"
+
+- name: Create Certificate
+  when: cert_created|changed
+  shell: "openssl x509 -req -in {{ certificates_private_directory }}/{{ item }}.req -days 3650 -CA {{ ca_cert }} -CAkey {{ ca_key }} -set_serial 01 > {{ certificates_cert_directory }}/{{ item }}.cert"
+  with_items:
+    - "{{ certificates_common_names }}"
+  tags:
+    - skip_ansible_lint
+
+- name: Remove Signing Request
+  file:
+    path: "{{ certificates_private_directory }}/{{ item }}.req"
+    state: absent
+  with_items:
+    - "{{ certificates_common_names }}"
