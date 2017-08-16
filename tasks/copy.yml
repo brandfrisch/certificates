@@ -8,7 +8,7 @@
     content: |
       {{ item.key }}
     owner: root
-    group: ssl-cert
+    group: "{{ certificates_group }}"
     mode: 0640
   with_items: "{{ certificates }}"
 
@@ -54,7 +54,7 @@
   copy:
     dest: "{{ certificates_private_directory }}/{{ item.name }}.key.cert.intermediate.root.pem"
     owner: root
-    group: ssl-cert
+    group: "{{ certificates_group }}"
     mode: 0640
     content: |
       {{ item.key }}{{ item.cert }}{{ item.intermediate }}{{ item.root }}

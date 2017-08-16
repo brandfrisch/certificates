@@ -10,11 +10,7 @@ certificates_ca_subject: "/C={{ certificates_country }}/ST={{ certificates_state
 certificates_subject: "{{ certificates_ca_subject }}/CN={{ certificates_common_name }}"
 certificates_generate_self_signed: false
 certificates: []
-certificates_packages:
-  - openssl
-  - ca-certificates
-  - ssl-cert
-certificates_additional_packages: []
 
-certificates_cert_directory: /etc/ssl/certs
-certificates_private_directory: /etc/ssl/private
+certificates_group: ssl-cert
+
+certificates_additional_packages: []

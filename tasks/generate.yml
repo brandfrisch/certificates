@@ -49,7 +49,7 @@
   file:
     path: "{{ certificates_private_directory }}/{{ item }}.key"
     owner: root
-    group: ssl-cert
+    group: "{{ certificates_group }}"
     mode: 0640
   with_items:
     - "{{ certificates_common_names }}"

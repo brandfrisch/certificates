@@ -1,6 +1,10 @@
 ---
 # tasks file for certificates
 
+- name: set distro-specific variables
+  include_vars: "{{ ansible_os_family | lower }}.yml"
+  ignore_errors: true
+
 - name: Install requirements
   package:
     name: "{{ item }}"
@@ -10,6 +14,12 @@
   tags:
     - package
     - certificates
+
+- name: Add ssl-cert group for read rights from non root apps
+  group:
+    name: ssl-cert
+    state: present
+    system: yes
 
 - name: Generate self-signed Certificates
   when: certificates_generate_self_signed

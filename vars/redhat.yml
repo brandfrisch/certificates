@@ -1,0 +1,7 @@
+---
+
+certificates_cert_directory: /etc/pki/tls/certs
+certificates_private_directory: /etc/pki/tls/private
+certificates_packages:
+  - openssl
+  - ca-certificates
