@@ -1,4 +1,4 @@
-Certificates [![Build Status](https://travis-ci.org/brandfrisch/certificates.svg?branch=master)](https://travis-ci.org/brandfrisch/certificates)
+Certificates
 =========
 
 This is a rule to setup certificates on a unix system

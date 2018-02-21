@@ -1,9 +1,0 @@
----
-
-certificates_cert_directory: /etc/ssl/certs
-certificates_private_directory: /etc/ssl/private
-
-certificates_packages:
-  - openssl
-  - ca-certificates
-  - ssl-cert
