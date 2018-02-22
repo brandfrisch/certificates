@@ -19,8 +19,8 @@
 
 - name: Generate self-signed Certificates
   when: certificates_generate_self_signed
-  include: generate.yml
+  include_tasks: generate.yml
 
 - name: Copy Certificates
   when: certificates is defined
-  include: copy.yml
+  include_tasks: copy.yml
