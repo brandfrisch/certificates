@@ -20,7 +20,14 @@
 
 - name: Create CA Cert
   when: ca_cert is not defined
-  shell: "openssl req -new -x509 -nodes -days 3650 -subj '{{ certificates_ca_subject }}' -key {{ ca_key }} > {{ certificates_cert_directory }}/ca.cert"
+  shell: >
+    openssl req
+    -new -x509
+    -nodes
+    -days 3650
+    -subj '{{ certificates_ca_subject }}'
+    -key {{ ca_key }}
+    > {{ certificates_cert_directory }}/ca.cert
   args:
     creates: "{{ certificates_cert_directory }}/ca.cert"
 
@@ -30,7 +37,14 @@
     ca_cert: "{{ certificates_cert_directory }}/ca.cert"
 
 - name: Create Signing Request
-  shell: "openssl req -newkey rsa:2048 -days 3560 -subj '{{ certificates_ca_subject }}/CN={{ item }}' -nodes -keyout {{ certificates_private_directory }}/{{ item }}.key > {{ certificates_private_directory }}/{{ item }}.req"
+  shell: >
+    openssl req
+    -newkey rsa:2048
+    -days 3560
+    -subj '{{ certificates_ca_subject }}/CN={{ item }}'
+    -nodes
+    -keyout {{ certificates_private_directory }}/{{ item }}.key
+    > {{ certificates_private_directory }}/{{ item }}.req
   args:
     creates: "{{ certificates_private_directory }}/{{ item }}.key"
   register: cert_created
@@ -39,7 +53,10 @@
 
 - name: Create Key
   when: cert_created|changed
-  shell: "openssl rsa -in {{ certificates_private_directory }}/{{ item }}.key -out {{ certificates_private_directory }}/{{ item }}.key"
+  shell: >
+    openssl rsa
+    -in {{ certificates_private_directory }}/{{ item }}.key
+    -out {{ certificates_private_directory }}/{{ item }}.key
   with_items:
     - "{{ certificates_common_names }}"
   tags:
@@ -56,7 +73,15 @@
 
 - name: Create Certificate
   when: cert_created|changed
-  shell: "openssl x509 -req -in {{ certificates_private_directory }}/{{ item }}.req -days 3650 -CA {{ ca_cert }} -CAkey {{ ca_key }} -set_serial 01 > {{ certificates_cert_directory }}/{{ item }}.cert"
+  shell: >
+    openssl x509
+    -req
+    -in {{ certificates_private_directory }}/{{ item }}.req
+    -days 3650
+    -CA {{ ca_cert }}
+    -CAkey {{ ca_key }}
+    -set_serial 01
+    > {{ certificates_cert_directory }}/{{ item }}.cert
   with_items:
     - "{{ certificates_common_names }}"
   tags:
