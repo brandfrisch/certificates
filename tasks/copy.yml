@@ -19,6 +19,9 @@
     dest: "{{certificates_cert_directory}}/{{ item.name }}.cert"
     content: |
       {{ item.cert }}
+    owner: root
+    group: "{{ certificates_group }}"
+    mode: 0644
   with_items: "{{ certificates }}"
 
 - name: Copy Intermediate Certificates
@@ -28,6 +31,9 @@
     dest: "{{certificates_cert_directory}}/{{ item.name }}.intermediate.cert"
     content: |
       {{ item.intermediate }}
+    owner: root
+    group: "{{ certificates_group }}"
+    mode: 0644
   with_items: "{{ certificates }}"
 
 - name: Copy Root Certificates
@@ -37,6 +43,9 @@
     dest: "{{certificates_cert_directory}}/{{ item.name }}.root.cert"
     content: |
       {{ item.root }}
+    owner: root
+    group: "{{ certificates_group }}"
+    mode: 0644
   with_items: "{{ certificates }}"
 
 - name: Create Entire SSL Certificate Trust Chain
@@ -46,6 +55,9 @@
     dest: "{{certificates_cert_directory}}/{{ item.name }}.cert.intermediate.root.pem"
     content: |
       {{ item.cert }}{{ item.intermediate }}{{ item.root }}
+    owner: root
+    group: "{{ certificates_group }}"
+    mode: 0644
   with_items: "{{ certificates }}"
 
 - name: Create Private Key and Entire Trust Chain
