@@ -4,7 +4,7 @@
   when: item.key is defined
   no_log: true
   copy:
-    dest: "{{certificates_private_directory}}/{{ item.name }}.key"
+    dest: "{{ certificates_private_directory }}/{{ item.name }}.key"
     content: |
       {{ item.key }}
     owner: root
@@ -16,7 +16,7 @@
   when: item.cert is defined
   no_log: true
   copy:
-    dest: "{{certificates_cert_directory}}/{{ item.name }}.cert"
+    dest: "{{ certificates_cert_directory }}/{{ item.name }}.cert"
     content: |
       {{ item.cert }}
     owner: root
@@ -28,7 +28,7 @@
   when: item.intermediate is defined
   no_log: true
   copy:
-    dest: "{{certificates_cert_directory}}/{{ item.name }}.intermediate.cert"
+    dest: "{{ certificates_cert_directory }}/{{ item.name }}.intermediate.cert"
     content: |
       {{ item.intermediate }}
     owner: root
@@ -40,7 +40,7 @@
   when: item.root is defined
   no_log: true
   copy:
-    dest: "{{certificates_cert_directory}}/{{ item.name }}.root.cert"
+    dest: "{{ certificates_cert_directory }}/{{ item.name }}.root.cert"
     content: |
       {{ item.root }}
     owner: root
@@ -52,7 +52,7 @@
   when: item.cert is defined and item.intermediate is defined and item.root is defined
   no_log: true
   copy:
-    dest: "{{certificates_cert_directory}}/{{ item.name }}.cert.intermediate.root.pem"
+    dest: "{{ certificates_cert_directory }}/{{ item.name }}.cert.intermediate.root.pem"
     content: |
       {{ item.cert }}{{ item.intermediate }}{{ item.root }}
     owner: root
