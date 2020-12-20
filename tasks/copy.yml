@@ -9,7 +9,7 @@
       {{ item.key }}
     owner: root
     group: "{{ certificates_group }}"
-    mode: 0640
+    mode: "0640"
   with_items: "{{ certificates }}"
 
 - name: Copy Certificates
@@ -21,7 +21,7 @@
       {{ item.cert }}
     owner: root
     group: "{{ certificates_group }}"
-    mode: 0644
+    mode: "0644"
   with_items: "{{ certificates }}"
 
 - name: Copy Intermediate Certificates
@@ -33,7 +33,7 @@
       {{ item.intermediate }}
     owner: root
     group: "{{ certificates_group }}"
-    mode: 0644
+    mode: "0644"
   with_items: "{{ certificates }}"
 
 - name: Copy Root Certificates
@@ -45,7 +45,7 @@
       {{ item.root }}
     owner: root
     group: "{{ certificates_group }}"
-    mode: 0644
+    mode: "0644"
   with_items: "{{ certificates }}"
 
 - name: Create Entire SSL Certificate Trust Chain
@@ -57,7 +57,7 @@
       {{ item.cert }}{{ item.intermediate }}{{ item.root }}
     owner: root
     group: "{{ certificates_group }}"
-    mode: 0644
+    mode: "0644"
   with_items: "{{ certificates }}"
 
 - name: Create Private Key and Entire Trust Chain
@@ -67,7 +67,7 @@
     dest: "{{ certificates_private_directory }}/{{ item.name }}.key.cert.intermediate.root.pem"
     owner: root
     group: "{{ certificates_group }}"
-    mode: 0640
+    mode: "0640"
     content: |
       {{ item.key }}{{ item.cert }}{{ item.intermediate }}{{ item.root }}
   with_items: "{{ certificates }}"

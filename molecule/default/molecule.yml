@@ -3,27 +3,33 @@ dependency:
   name: galaxy
 driver:
   name: docker
-lint:
-  name: yamllint
 platforms:
-  - name: certificates-ubuntu-1604
-    image: brandfrisch/ubuntu-16.04:latest
-    privileged: True
-    command: /lib/systemd/systemd
+  - name: ansible-certificates-ubuntu-18.04
+    image: fittest/ubuntu-18.04:latest
+    pre_build_image: true
+    command: /sbin/init
+    privileged: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    docker_ssl_version: SSLv23
+  - name: ansible-certificates-ubuntu-20.04
+    image: fittest/ubuntu-20.04:latest
+    pre_build_image: true
+    command: /sbin/init
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    docker_ssl_version: SSLv23
 provisioner:
   name: ansible
   options:
     D: True
-  lint:
-    name: ansible-lint
-    options:
-      R: true
-      r: ./node_modules/ansible-lint-rules/rules
 scenario:
   name: default
 verifier:
   name: goss
-  lint:
-    name: yamllint
+  enabled: True
+lint: |
+  set -e
+  yamllint .
+  ansible-lint -R .

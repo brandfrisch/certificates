@@ -2,15 +2,13 @@
 galaxy_info:
   author: Alexander Jäger
   description: A role to install certificates
-  company: The Fittest UG (haftungsbeschraenkt)
+  company: The Fittest GmbH
   license: MIT
-  min_ansible_version: 2.4
+  min_ansible_version: 2.10
   platforms:
-    - name: Debian
-      versions:
-        - jessie
     - name: Ubuntu
       versions:
         - xenial
+        - focal
   galaxy_tags: []
 dependencies: []

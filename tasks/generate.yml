@@ -16,7 +16,7 @@
     path: "{{ ca_key }}"
     owner: root
     group: root
-    mode: 0600
+    mode: "0600"
 
 - name: Create CA Cert
   when: ca_cert is not defined
@@ -52,7 +52,7 @@
     - "{{ certificates_common_names }}"
 
 - name: Create Key
-  when: cert_created|changed
+  when: cert_created is changed
   shell: >
     openssl rsa
     -in {{ certificates_private_directory }}/{{ item }}.key
@@ -67,12 +67,12 @@
     path: "{{ certificates_private_directory }}/{{ item }}.key"
     owner: root
     group: "{{ certificates_group }}"
-    mode: 0640
+    mode: "0640"
   with_items:
     - "{{ certificates_common_names }}"
 
 - name: Create Certificate
-  when: cert_created|changed
+  when: cert_created is changed
   shell: >
     openssl x509
     -req

@@ -1,7 +1,10 @@
 ---
-- hosts: all
-  roles:
-    - role: ansible-certificates
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include ansible-clamav"
+      include_role:
+        name: "ansible-certificates"
 
   vars:
     certificates_generate_self_signed: true
